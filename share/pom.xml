@@ -45,7 +45,63 @@
   <build>
     <directory>${project.basedir}/build</directory>
     <finalName>${project.artifactId}-${project.version}</finalName>
+    <plugins>
+           <plugin>
+                <groupId>org.jfrog.buildinfo</groupId>
+                <artifactId>artifactory-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                        <configuration>
+                            <deployProperties>
+                                <gradle>awesome</gradle>
+                            </deployProperties>
+                            <artifactory>
+                                <includeEnvVars>true</includeEnvVars>
+                                <timeoutSec>60</timeoutSec>
+                                <propertiesFile>publish.properties</propertiesFile>
+                            </artifactory>
+                            <publisher>
+                                <contextUrl>http://edify.artifactoryonline.com/edify/</contextUrl>
+                                <username>${artifactoryUsername}</username>
+                                <password>${artifactoryPassword}</password>
+                                <excludePatterns>*-tests.jar</excludePatterns>
+                                <repoKey>hotchalk-local</repoKey>
+                                <snapshotRepoKey>hotchalk-local</snapshotRepoKey>
+                            </publisher>
+                            <buildInfo>
+                                <buildName>${project.artifactId}-${project.version}</buildName>
+                                <buildNumber>1</buildNumber>
+                            </buildInfo>
+                            <licenses>
+                                <autoDiscover>true</autoDiscover>
+                                <includePublishedArtifacts>false</includePublishedArtifacts>
+                                <runChecks>true</runChecks>
+                                <scopes>compile,runtime</scopes>
+                                <violationRecipients>luis.ledezma@edify.cr</violationRecipients>
+                            </licenses>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+	</plugins>
   </build>
+
+  <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray-plugins</name>
+            <url>http://jcenter.bintray.com</url>
+        </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -61,4 +117,7 @@
       </dependencies>
     </profile>
   </profiles>
+
+
+
 </project>
